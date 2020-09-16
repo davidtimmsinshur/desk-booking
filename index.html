@@ -2,6 +2,8 @@
 <html>
   <head>
     <title>Google Calendar API Quickstart</title>
+	<link rel="icon" href="https://inshur.com/wp-content/uploads/2018/01/cropped-INSHUR-app-icon-32x32.png" sizes="32x32" />
+	
     <meta charset="utf-8" />
   </head>
   <body>
@@ -100,7 +102,7 @@
       function handleExecuteClick(event) {
 		clearContent();
 		listDesks();
-        listUpcomingEvents();
+        //listUpcomingEvents();
       }
 
       /**
@@ -142,20 +144,19 @@
           console.log("Response", response);
 		  var assets = response.result.items;
 		  
-          appendPre('List of Desks' + ':');
+          //appendPre('List of Desks' + ':');
 
           if (assets.length > 0) {
             for (i = 0; i < assets.length; i++) {
               var asset = assets[i];
-              //var when = event.start.dateTime;
-              //if (!when) {
-              //  when = event.start.date;
+   
 			  var name = asset.resourceName;
-			  var email = asset.resourceEmail;
+			  var email = asset.resourceEmail;			  
+             
+              //appendPre(name + ' (' + email + ')');
 			  
-              //}
-              //appendPre(event.summary + ' (' + when + ')');
-              appendPre(name + ' (' + email + ')');
+			  listUpcomingEvents(name, email);
+			  
             }
           } else {
             appendPre('No desks found.');
@@ -172,7 +173,7 @@
        * the authorized user's calendar. If no events are found an
        * appropriate message is printed.
        */
-      function listUpcomingEvents(calendarId) {
+      function listUpcomingEvents(calendarName, calendarId) {
 	  console.log("listUpcomingEvents");
 	  var calendar = calendarId? calendarId : "c_1882pspe8q81ei2oku0d5hmqs1hjg4gad5n76q3le8n66rrd@resource.calendar.google.com";
 	  //week = startAndEndOfWeekAsISOString('2020-09-23T00:00:00Z');
@@ -187,7 +188,7 @@
           console.log("Response", response);
 		  var events = response.result.items;
 		  
-          appendPre('Desk bookings for ' + calendar + ':');
+          appendPre('Desk bookings for ' + calendarName + ':');
 
           if (events.length > 0) {
             for (i = 0; i < events.length; i++) {
@@ -198,6 +199,7 @@
               }
               appendPre(event.summary + ' (' + when + ')');
             }
+			appendPre("");
           } else {
             appendPre('No bookings found.');
           }
