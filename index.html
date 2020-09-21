@@ -106,7 +106,7 @@
 		   */
 		function handleExecuteClick(event) {
 			clearContent();
-			renderDesks();
+			renderDesksWithEvents();
 			//listDesks();
 			//listUpcomingEvents();
 		}
@@ -176,7 +176,7 @@
 
 						// for each desk get events
 						// 	add events promise to array
-						deskEvents.push(listUpcomingEvents(name, email));
+						deskEvents.push(listUpcomingEvents(name));
 						//listUpcomingEvents(name, email);
 					}
 
@@ -190,11 +190,18 @@
 							console.log("event array", events[i]);
 							if (events[i].length > 0) {
 								for (j = 0; j < events[i].length; j++) {
-									var when = events[i][j].start.dateTime;
-									if (!when) {
-										when = events[i][j].start.date;
+									var start = events[i][j].start.dateTime;
+									if (!start) {
+										start = events[i][j].start.date;
 									}
-									appendPre(events[i][j].summary + ' (' + when + ')');
+									var end = events[i][j].end.dateTime;
+									if (!end) {
+										end = events[i][j].end.date;
+									}
+									start = start.substring(0,10);
+									end = end.substring(0,10);
+
+									appendPre('(' + start + ') - (' + end + '):    ' + events[i][j].summary);
 								}
 
 							} else {
