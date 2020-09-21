@@ -186,7 +186,8 @@
 
 						// Render results
 						for (i = 0; i < events.length; i++) {
-							appendPre(assets[i].resourceName + ' (' + assets[i].resourceEmail + ')');
+							//appendPre(assets[i].resourceName + ' (' + assets[i].resourceEmail + ')');
+							appendPre(assets[i].resourceName);
 							console.log("event array", events[i]);
 							if (events[i].length > 0) {
 								for (j = 0; j < events[i].length; j++) {
