@@ -158,6 +158,8 @@
 		function renderDesksWithEvents() {
 			console.log("renderDesksWithEvents");
 
+			let week = startAndEndOfWeekAsISOString();
+
 			// get desks
 			let assets = [];
 			assets = listDesks();
@@ -168,16 +170,12 @@
 
 				if (assets.length > 0) {
 
-					for (i = 0; i < assets.length; i++) {
-						var asset = assets[i];
-
-						var name = asset.resourceName;
-						var email = asset.resourceEmail;
+					for (i = 0; i < assets.length; i++) {						
 
 						// for each desk get events
 						// 	add events promise to array
-						deskEvents.push(listUpcomingEvents(name, email));
-						//listUpcomingEvents(name, email);
+						var email = assets[i].resourceEmail;
+						deskEvents.push(listUpcomingEvents(email, week[0], week[1]));
 					}
 
 					// Promise.all array of events
@@ -279,17 +277,17 @@
 		 * the authorized user's calendar. If no events are found an
 		 * appropriate message is printed.
 		 */
-		function listUpcomingEvents(calendarName, calendarId, minTime, maxTime) {
+		function listUpcomingEvents(calendarId, minTime, maxTime) {
 			console.log("listUpcomingEvents");
 			var calendar = calendarId ? calendarId : "c_1882pspe8q81ei2oku0d5hmqs1hjg4gad5n76q3le8n66rrd@resource.calendar.google.com";
 			//week = startAndEndOfWeekAsISOString('2020-09-23T00:00:00Z');
-			week = startAndEndOfWeekAsISOString();
+			//week = startAndEndOfWeekAsISOString();
 			return gapi.client.calendar.events.list({
 				"calendarId": calendar,
 				"orderBy": "startTime",
 				"singleEvents": true,
-				"timeMax": week[1],
-				"timeMin": week[0]
+				"timeMax": maxTime,
+				"timeMin": minTime
 			}).then(function (response) {
 				console.log("Response", response);
 				var events = response.result.items;
