@@ -80,6 +80,7 @@
 				currentButton.style.display = 'block';
 
 				//listUpcomingEvents();
+				renderDesksWithEvents();
 			} else {
 				authorizeButton.style.display = 'block';
 				signoutButton.style.display = 'none';
@@ -197,10 +198,18 @@
 									if (!end) {
 										end = events[i][j].end.date;
 									}
-									start = start.substring(0,10);
-									end = end.substring(0,10);
+									start = (new Date(start.substring(0,10))).toLocaleDateString('en-GB');
+									end = new Date(end.substring(0,10));
+									end.setUTCMinutes(-61);
+									end = end.toLocaleDateString('en-GB');
 
-									appendPre('(' + start + ') - (' + end + '):    ' + events[i][j].summary);
+									if (start.substring(0,10) == end.substring(0,10)) {
+										appendPre('(' + start + '):    ' + events[i][j].summary);
+									} else {
+										appendPre('(' + start + ') - (' + end + '):    ' + events[i][j].summary);
+									}
+
+									
 								}
 
 							} else {
