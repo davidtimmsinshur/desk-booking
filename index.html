@@ -37,6 +37,7 @@
 		var authorizeButton = document.getElementById('authorize_button');
 		var signoutButton = document.getElementById('signout_button');
 		var currentButton = document.getElementById('current_button');
+		var nextButton = document.getElementById('next_button');
 
 		/**
 		 *  On load, called to load the auth2 library and API client library.
@@ -63,7 +64,8 @@
 				updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 				authorizeButton.onclick = handleAuthClick;
 				signoutButton.onclick = handleSignoutClick;
-				currentButton.onclick = handleExecuteClick;
+				currentButton.onclick = handleCurrentButtonClick;
+				nextButton.onclick = handleNextButtonClick;
 			}, function (error) {
 				appendPre(JSON.stringify(error, null, 2));
 			});
@@ -78,13 +80,15 @@
 				authorizeButton.style.display = 'none';
 				signoutButton.style.display = 'block';
 				currentButton.style.display = 'block';
+				nextButton.style.display = 'block';
 
 				//listUpcomingEvents();
-				renderDesksWithEvents();
+				renderDesksWithEvents(new Date());
 			} else {
 				authorizeButton.style.display = 'block';
 				signoutButton.style.display = 'none';
 				currentButton.style.display = 'none';
+				nextButton.style.display = 'none';
 			}
 		}
 
@@ -99,18 +103,31 @@
 		 *  Sign out the user upon button click.
 		 */
 		function handleSignoutClick(event) {
+			clearContent();
 			gapi.auth2.getAuthInstance().signOut();
 		}
 
 		/**
 		   *  Do something when clicking execute.
 		   */
-		function handleExecuteClick(event) {
+		function handleCurrentButtonClick(event) {
 			clearContent();
-			renderDesksWithEvents();
+			let target = new Date();
+			renderDesksWithEvents(target);
 			//listDesks();
 			//listUpcomingEvents();
 		}
+
+		function handleNextButtonClick(event) {
+			clearContent();
+			let target = new Date();
+			target.setDate(target.getDate() + 7);
+			renderDesksWithEvents(target);
+			//listDesks();
+			//listUpcomingEvents();
+		}
+
+
 
 		/**
 		 * Append a pre element to the body containing the given message
@@ -156,10 +173,13 @@
 		}
 
 		
-		function renderDesksWithEvents() {
+		function renderDesksWithEvents(targetDate) {
 			console.log("renderDesksWithEvents");
+			console.log("targetDate", targetDate.toISOString());
 
-			let week = startAndEndOfWeekAsISOString();
+			let week = startAndEndOfWeekAsISOString(targetDate);
+
+			
 
 			// get desks
 			let assets = [];
@@ -170,6 +190,7 @@
 				let deskEvents = [];
 
 				if (assets.length > 0) {
+					appendPre("Displaying Desk Bookings for " + new Date(week[0]).toLocaleDateString() + " - " + new Date(week[1]).toLocaleDateString() + "\n");
 
 					for (i = 0; i < assets.length; i++) {						
 
@@ -203,7 +224,7 @@
 									end.setUTCMinutes(-61);
 									end = end.toLocaleDateString('en-GB');
 
-									if (start.substring(0,10) == end.substring(0,10)) {
+									if ((start.substring(0,10) >= end.substring(0,10)) ) {
 										appendPre('(' + start + '):    ' + events[i][j].summary);
 									} else {
 										appendPre('(' + start + ') - (' + end + '):    ' + events[i][j].summary);
