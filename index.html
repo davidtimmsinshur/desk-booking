@@ -121,7 +121,7 @@
 		function handleNextButtonClick(event) {
 			clearContent();
 			let target = new Date();
-			target.setDate(target.getDate() + 7);
+			target.setDate(target.getDate() - 14);
 			renderDesksWithEvents(target);
 			//listDesks();
 			//listUpcomingEvents();
@@ -254,7 +254,10 @@
 									end.setUTCMinutes(-61);
 									end = end.toLocaleDateString('en-GB');
 
-									if ((start.substring(0, 10) >= end.substring(0, 10))) {
+									// appendPre('(' + start + ') - (' + end + '):    ' + events[i][j].summary);
+
+									// 
+									if ((start == end)) {
 										appendPre('(' + start + '):    ' + events[i][j].summary);
 									} else {
 										appendPre('(' + start + ') - (' + end + '):    ' + events[i][j].summary);
