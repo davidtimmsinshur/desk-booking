@@ -264,7 +264,7 @@
 									start = (new Date(start.substring(0, 10)));
 									start.setHours(0, 0, 0, 0)
 									end = new Date(end.substring(0, 10));
-									end.setHours(23, 59, 59, 0);
+									end.setUTCMinutes(-61);
 
 									// appendPre('(' + start + ') - (' + end + '):    ' + events[i][j].summary);
 
