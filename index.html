@@ -114,17 +114,13 @@
 			clearContent();
 			let target = new Date();
 			renderDesksWithEvents(target);
-			//listDesks();
-			//listUpcomingEvents();
 		}
 
 		function handleNextButtonClick(event) {
 			clearContent();
 			let target = new Date();
-			target.setDate(target.getDate() - 14);
+			target.setDate(target.getDate() + 7 );
 			renderDesksWithEvents(target);
-			//listDesks();
-			//listUpcomingEvents();
 		}
 
 
@@ -151,11 +147,27 @@
 			//by default sets first/last day of week to sunday/saturday so don't need to worry about time portion as events will be mon - fri only
 			var first = curr.getDate() - curr.getDay(); // First day is the  day of the month - the day of the week
 			var last = first + 6; // last day is the first day + 6
-			firstDay = new Date(curr.setDate(first)).toISOString();
-			lastDay = new Date(curr.setDate(curr.getDate() + 6)).toISOString();
-			console.log("start of week", firstDay);
-			console.log("end of week", lastDay);
-			return [firstDay, lastDay];
+
+			firstDay = new Date(curr.setDate(first));
+			firstDay.setHours(0, 0, 0, 0);
+			lastDay = new Date(curr.setDate(curr.getDate() + 6));
+			lastDay.setHours(23, 59, 59, 0);
+
+			console.log("start of week", firstDay.toISOString());
+			console.log("end of week", lastDay.toISOString());
+			return [firstDay.toISOString(), lastDay.toISOString()];
+		}
+
+		function getDatesInWeek(startDate, endDate) {
+			let dates = [];
+			let date = new Date(startDate);
+			let end = new Date(endDate);
+			
+			while (date <= end) {
+				dates = [...dates, new Date(date)];
+				date.setDate(date.getDate() + 1);
+			}
+			return dates;
 		}
 
 		function listDesks() {
@@ -249,18 +261,20 @@
 									if (!end) {
 										end = events[i][j].end.date;
 									}
-									start = (new Date(start.substring(0, 10))).toLocaleDateString('en-GB');
+									start = (new Date(start.substring(0, 10)));
+									start.setHours(0, 0, 0, 0)
 									end = new Date(end.substring(0, 10));
-									end.setUTCMinutes(-61);
-									end = end.toLocaleDateString('en-GB');
+									end.setHours(23, 59, 59, 0);
 
 									// appendPre('(' + start + ') - (' + end + '):    ' + events[i][j].summary);
 
 									// 
-									if ((start == end)) {
-										appendPre('(' + start + '):    ' + events[i][j].summary);
+									startDate = start.toLocaleDateString('en-GB');
+									endDate = end.toLocaleDateString('en-GB');
+									if ((start == end) || (start > end)) {
+										appendPre('(' + startDate + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
 									} else {
-										appendPre('(' + start + ') - (' + end + '):    ' + events[i][j].summary);
+										appendPre('(' + startDate + ') - (' + endDate + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
 									}
 
 
