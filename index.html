@@ -266,23 +266,27 @@
 							console.log("event array", events[i]);
 							if (events[i].length > 0) {
 								for (j = 0; j < events[i].length; j++) {
+									// get event start time
 									var start = events[i][j].start.dateTime;
 									if (!start) {
 										start = events[i][j].start.date;
 									}
+									// get event end time. note end time of calendar bookings are "exclusive" 
+									// ie up to returned time but not including
 									var end = events[i][j].end.dateTime;
 									if (!end) {
 										end = events[i][j].end.date;
 									}
-									start = (new Date(start.substring(0, 10)));
+									// convert utc timestamp to local time for user to reflect all day booking and set end time
+									start = (new Date(start));
 									start.setHours(0, 0, 0, 0);
-									end = new Date(end.substring(0, 10));
-									end.setUTCMinutes(-61);
-									//end.setHours(23, 59, 59, 0);
+									end = new Date(end);
+									end.setHours(0, 0, 0, 0);
+									end.setSeconds(-1);
+									// console.log("start", start);
+									// console.log("end", end);
 
-									// appendPre('(' + start + ') - (' + end + '):    ' + events[i][j].summary);
-
-									// 
+									// display date or date range
 									startDate = start.toLocaleDateString('en-GB');
 									endDate = end.toLocaleDateString('en-GB');
 									//if ((start == end) || (start > end)) {
@@ -311,57 +315,57 @@
 			});
 		}
 
-		function renderDesks() {
-			let assets = [];
-			assets = listDesks();
-			assets.then(assets => {
-				console.log("desks", assets);
+		// function renderDesks() {
+		// 	let assets = [];
+		// 	assets = listDesks();
+		// 	assets.then(assets => {
+		// 		console.log("desks", assets);
 
-				if (assets.length > 0) {
+		// 		if (assets.length > 0) {
 
-					for (i = 0; i < assets.length; i++) {
-						var asset = assets[i];
+		// 			for (i = 0; i < assets.length; i++) {
+		// 				var asset = assets[i];
 
-						var name = asset.resourceName;
-						var email = asset.resourceEmail;
+		// 				var name = asset.resourceName;
+		// 				var email = asset.resourceEmail;
 
-						appendPre(name + ' (' + email + ')');
-					}
+		// 				appendPre(name + ' (' + email + ')');
+		// 			}
 
-				} else {
-					appendPre('No desks found.');
-				}
-			});
-			assets.catch(err => {
-				console.Error("listDesks", "There was an error processing the desks. " + err)
-			});
-		}
+		// 		} else {
+		// 			appendPre('No desks found.');
+		// 		}
+		// 	});
+		// 	assets.catch(err => {
+		// 		console.Error("listDesks", "There was an error processing the desks. " + err)
+		// 	});
+		// }
 
-		function renderEvents() {
-			let events = [];
-			events = listUpcomingEvents();
-			events.then(events => {
-				console.log("events", events);
+		// function renderEvents() {
+		// 	let events = [];
+		// 	events = listUpcomingEvents();
+		// 	events.then(events => {
+		// 		console.log("events", events);
 
-				if (events.length > 0) {
-					for (i = 0; i < events.length; i++) {
-						var event = events[i];
-						var when = event.start.dateTime;
-						if (!when) {
-							when = event.start.date;
-						}
-						appendPre(event.summary + ' (' + when + ')');
-					}
-					appendPre("");
+		// 		if (events.length > 0) {
+		// 			for (i = 0; i < events.length; i++) {
+		// 				var event = events[i];
+		// 				var when = event.start.dateTime;
+		// 				if (!when) {
+		// 					when = event.start.date;
+		// 				}
+		// 				appendPre(event.summary + ' (' + when + ')');
+		// 			}
+		// 			appendPre("");
 
-				} else {
-					appendPre('No bookings found.');
-				}
-			});
-			events.catch(err => {
-				console.Error("listEvents", "There was an error processing the events. " + err)
-			});
-		}
+		// 		} else {
+		// 			appendPre('No bookings found.');
+		// 		}
+		// 	});
+		// 	events.catch(err => {
+		// 		console.Error("listEvents", "There was an error processing the events. " + err)
+		// 	});
+		// }
 
 
 		/**
