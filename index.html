@@ -96,8 +96,9 @@
 				signoutButton.style.display = 'block';
 				currentButton.style.display = 'inline-block';
 				nextButton.style.display = 'inline';
-
-				renderDesksWithEvents(new Date());
+				let target = new Date();
+				// target.setDate(target.getDate() - 14);
+				renderDesksWithEvents(target);
 			} else {
 				authorizeButton.style.display = 'block';
 				signoutButton.style.display = 'none';
@@ -151,6 +152,9 @@
 			pre.appendChild(textContent);
 		}
 
+		/**
+		 * Clear down contents of pre element 
+		 */
 		function clearContent() {
 			var content = document.getElementById('content');
 			content.textContent = ""
@@ -163,6 +167,7 @@
 		* Week runs Sun - Sat
 		 *
 		 * @param {Date} [date] Optional seed date for calculation. Set to today if null.
+		 * @returns {Array.<Date>} Array containg start date of week and end date of week.
 		 */
 		function startAndEndOfWeekAsISOString(date) { //'2020-09-02T00:00:00Z'
 			var curr = date ? date : new Date();
@@ -181,10 +186,18 @@
 		}
 
 		/**
+		 * Get a list of all calendar days between two dates, inclusive.
 		 * @param {Date} startDate First date of period. Inclusive.
-		 * @param {Date} endDate Final date of period. Inclusive.
+		 * @param {Date} [endDate] Final date of period. Inclusive.
+		 * @returns {Array.<Date>}
 		 */
-		function getDatesInWeek(startDate, endDate) {
+		function getDatesBetween(startDate, endDate) {
+
+			if (!endDate) {
+				dates = startAndEndOfWeekAsISOString(startDate);
+				endDate = dates[1];
+			}
+
 			let dates = [];
 			let date = new Date(startDate);
 			let end = new Date(endDate);
@@ -196,6 +209,10 @@
 			return dates;
 		}
 
+		/**
+		 * Fetch a list of desks that match a preset pattern.
+		 * @returns {Promise<object[]>} Array of promises that represent desks available in the google calendar resources list
+		 */
 		function listDesks() {
 			console.log("listDesks");
 
@@ -244,7 +261,11 @@
 			});
 		}
 
-
+		/**
+		 * Main driver function.
+		 * 
+		 * @param {Date} targetDate Date on which to base the date range (Sun to Sat)
+		 */
 		function renderDesksWithEvents(targetDate) {
 			console.log("renderDesksWithEvents");
 			console.log("targetDate", targetDate.toISOString());
@@ -270,57 +291,85 @@
 						deskEvents.push(listUpcomingEvents(email, week[0], week[1]));
 					}
 
-					// Promise.all array of events
+
+					// Once all events have been returned, process array of events
 					Promise.all(deskEvents).then(events => {
 						console.log("deskEvents", events);
 
+						let weekDays = getDatesBetween(week[0], week[1]);
+						// console.log("weekDays", weekDays.toString());
+						console.log("weekDays", weekDays);
+						numberOfDays = weekDays.length;
+						console.log("numberOfDays", numberOfDays);
+
 						// Render results
-						for (i = 0; i < events.length; i++) {
+						// For each desk
+						for (let i = 0; i < events.length; i++) {
 							//appendPre(assets[i].resourceName + ' (' + assets[i].resourceEmail + ')');
 							appendPre(assets[i].resourceName);
+
 							console.log("event array", events[i]);
-							if (events[i].length > 0) {
-								for (j = 0; j < events[i].length; j++) {
-									// get event start time
-									var start = events[i][j].start.dateTime;
-									if (!start) {
-										start = events[i][j].start.date;
-									}
-									// get event end time. note end time of calendar bookings are "exclusive" 
-									// ie up to returned time but not including
-									var end = events[i][j].end.dateTime;
-									if (!end) {
-										end = events[i][j].end.date;
-									}
-									// convert utc timestamp to local time for user to reflect all day booking and set end time
-									start = (new Date(start));
-									start.setHours(0, 0, 0, 0);
-									end = new Date(end);
-									end.setHours(0, 0, 0, 0);
-									end.setSeconds(-1);
-									// console.log("start", start);
-									// console.log("end", end);
 
-									// display date or date range
-									startDate = start.toLocaleDateString('en-GB');
-									endDate = end.toLocaleDateString('en-GB');
-									//if ((start == end) || (start > end)) {
-									if ((startDate == endDate)) {
-										appendPre('(' + startDate + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
-									} else {
-										appendPre('(' + startDate + ') - (' + endDate + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
+							if (events[i].length > 0) { // events exist
+
+								// for each day in weekDays (excluding Sun and Sat)
+								for (let k = 1; k < numberOfDays - 1; k++) {
+
+									// for each event
+									for (let j = 0; j < events[i].length; j++) {
+
+										// get event start time
+										var start = events[i][j].start.dateTime;
+										if (!start) {
+											start = events[i][j].start.date;
+										}
+
+										// get event end time. note end time of calendar bookings are "exclusive" 
+										// ie up to returned time but not including
+										var end = events[i][j].end.dateTime;
+										if (!end) {
+											end = events[i][j].end.date;
+										}
+
+										// convert utc timestamp to local time for user to reflect all day booking and set end time
+										start = (new Date(start));
+										start.setHours(0, 0, 0, 0);
+										end = new Date(end);
+										end.setHours(0, 0, 0, 0);
+										end.setSeconds(-1);
+										console.log("start", start);
+										console.log("end", end);
+
+										// check if event is active for current day k
+										if (start <= weekDays[k] && end >= weekDays[k]) {
+											// there is a booking
+											// display date or date range
+											console.log("booking", k);
+											startDate = start.toLocaleDateString('en-GB');
+											endDate = end.toLocaleDateString('en-GB');
+											//if ((start == end) || (start > end)) {
+											if ((startDate == endDate)) {
+												appendPre('(' + weekDays[k].toLocaleDateString('en-GB') + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
+											} else {
+												appendPre('(' + weekDays[k].toLocaleDateString('en-GB') + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ' (' + startDate + ') - (' + endDate + '))');
+											}
+											break;											
+										} else {
+											// skip to next event
+											console.log("no booking", k);
+											appendPre('(' + weekDays[k].toLocaleDateString('en-GB') + '):    ' + "No bookings");
+											break;
+										}
 									}
-
-
 								}
 
-							} else {
+							} else { // no events
 								appendPre('No desk bookings for this period.');
 							}
 							appendPre("");
 						}
 					});
-				} else {
+				} else { // no desks
 					appendPre('No desks found.');
 				}
 			});
@@ -330,63 +379,15 @@
 			});
 		}
 
-		// function renderDesks() {
-		// 	let assets = [];
-		// 	assets = listDesks();
-		// 	assets.then(assets => {
-		// 		console.log("desks", assets);
-
-		// 		if (assets.length > 0) {
-
-		// 			for (i = 0; i < assets.length; i++) {
-		// 				var asset = assets[i];
-
-		// 				var name = asset.resourceName;
-		// 				var email = asset.resourceEmail;
-
-		// 				appendPre(name + ' (' + email + ')');
-		// 			}
-
-		// 		} else {
-		// 			appendPre('No desks found.');
-		// 		}
-		// 	});
-		// 	assets.catch(err => {
-		// 		console.Error("listDesks", "There was an error processing the desks. " + err)
-		// 	});
-		// }
-
-		// function renderEvents() {
-		// 	let events = [];
-		// 	events = listUpcomingEvents();
-		// 	events.then(events => {
-		// 		console.log("events", events);
-
-		// 		if (events.length > 0) {
-		// 			for (i = 0; i < events.length; i++) {
-		// 				var event = events[i];
-		// 				var when = event.start.dateTime;
-		// 				if (!when) {
-		// 					when = event.start.date;
-		// 				}
-		// 				appendPre(event.summary + ' (' + when + ')');
-		// 			}
-		// 			appendPre("");
-
-		// 		} else {
-		// 			appendPre('No bookings found.');
-		// 		}
-		// 	});
-		// 	events.catch(err => {
-		// 		console.Error("listEvents", "There was an error processing the events. " + err)
-		// 	});
-		// }
-
 
 		/**
-		 * Print the summary and start datetime/date of the next ten events in
-		 * the authorized user's calendar. If no events are found an
-		 * appropriate message is printed.
+		 * Fetch the events related to the provided calendar. 
+		 * Returns array of promises containing event objects
+		 * 
+		 * @param {?string} calendarId Email address of calendar or null. 
+		 * @param {String} minTime Earliest start time of events.
+		 * @param {String} maxTime Latest end time of events.
+		 * @returns {Promise<object[]>}
 		 */
 		function listUpcomingEvents(calendarId, minTime, maxTime) {
 			console.log("listUpcomingEvents");
@@ -397,10 +398,10 @@
 				"calendarId": calendar,
 				"orderBy": "startTime",
 				"singleEvents": true,
-				"timeMax": maxTime,
+				"timeMax": maxTime, // this is not the latest start time it's the latest end time
 				"timeMin": minTime
 			}).then(function (response) {
-				console.log("Response", response);
+				//console.log("Event Response", response);
 				var events = response.result.items;
 
 				return events;
