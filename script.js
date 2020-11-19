@@ -14,6 +14,8 @@ var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
 var currentButton = document.getElementById('current_button');
 var nextButton = document.getElementById('next_button');
+var loadingNotification = document.getElementsByClassName('loading')[0];
+var mainDiv = document.getElementsByClassName('main')[0];
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -53,18 +55,20 @@ function initClient() {
  */
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
-        authorizeButton.style.display = 'none';
-        signoutButton.style.display = 'block';
-        currentButton.style.display = 'inline-block';
-        nextButton.style.display = 'inline';
+        authorizeButton.classList.add("hidden");
+        signoutButton.classList.remove("hidden");
+        currentButton.classList.remove("hidden");
+        nextButton.classList.remove("hidden");
+        
         let target = new Date();
-        // target.setDate(target.getDate() - 14);
+        target.setDate(target.getDate() - 0);
         renderDesksWithEvents(target);
     } else {
-        authorizeButton.style.display = 'block';
-        signoutButton.style.display = 'none';
-        currentButton.style.display = 'none';
-        nextButton.style.display = 'none';
+        authorizeButton.classList.remove("hidden");
+        signoutButton.classList.add("hidden");
+        currentButton.classList.add("hidden");
+        nextButton.classList.add("hidden");
+        // loadingNotification.classList.add("hidden");
     }
 }
 
@@ -88,15 +92,23 @@ function handleSignoutClick(event) {
 */
 function handleCurrentButtonClick(event) {
     clearContent();
+    // mainDiv.classList.add("hidden");
+    // loadingNotification.classList.remove("hidden");
     let target = new Date();
     renderDesksWithEvents(target);
+    // loadingNotification.classList.add("hidden");
+    // mainDiv.classList.remove("hidden");
 }
 
 function handleNextButtonClick(event) {
     clearContent();
+    // mainDiv.classList.add("hidden");
+    // loadingNotification.classList.remove("hidden");
     let target = new Date();
     target.setDate(target.getDate() + 7);
     renderDesksWithEvents(target);
+    // loadingNotification.classList.add("hidden");
+    // mainDiv.classList.remove("hidden");
 }
 
 
@@ -231,6 +243,10 @@ function renderDesksWithEvents(targetDate) {
     console.log("renderDesksWithEvents");
     console.log("targetDate", targetDate.toISOString());
 
+    // show loading icon
+    loadingNotification.classList.remove("hidden");
+    mainDiv.classList.add("hidden");
+
     let week = startAndEndOfWeekAsISOString(targetDate);
 
     // get desks
@@ -301,6 +317,8 @@ function renderDesksWithEvents(targetDate) {
                                 console.log("start", start);
                                 console.log("end", end);
 
+                                currentDateString = weekDays[k].toLocaleDateString('en-GB');
+
                                 // check if event is active for current day k
                                 if (start <= weekDays[k] && end >= weekDays[k]) {
                                     // there is a booking
@@ -308,24 +326,30 @@ function renderDesksWithEvents(targetDate) {
                                     console.log("booking", k);
                                     startDate = start.toLocaleDateString('en-GB');
                                     endDate = end.toLocaleDateString('en-GB');
-                                    //if ((start == end) || (start > end)) {
-                                    if ((startDate == endDate)) {
-                                        appendPre('(' + weekDays[k].toLocaleDateString('en-GB') + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
-                                    } else {
-                                        appendPre('(' + weekDays[k].toLocaleDateString('en-GB') + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ' (' + startDate + ') - (' + endDate + '))');
-                                    }
+                                    
+                                    appendPre('    ' + currentDateString + '    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
+
+                                    // //if ((start == end) || (start > end)) {
+                                    // if ((startDate == endDate)) {
+                                    //     // appendPre('(' + currentDateString + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
+                                    //     appendPre('    ' + currentDateString + '    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
+                                    // } else {
+                                    //     // appendPre('(' + currentDateString + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ' (' + startDate + ') - (' + endDate + '))');
+                                    //     // appendPre('(' + currentDateString + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
+                                    //     appendPre('    ' + currentDateString + '    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
+                                    // }
                                     break;
                                 } else {
                                     // skip to next event
                                     console.log("no booking", k);
-                                    appendPre('(' + weekDays[k].toLocaleDateString('en-GB') + '):    ' + "No bookings");
+                                    appendPre('    ' + currentDateString + '    ' + "No bookings");
                                     break;
                                 }
                             }
                         }
 
                     } else { // no events
-                        appendPre('No desk bookings for this period.');
+                        appendPre('    No bookings for this period.');
                     }
                     appendPre("");
                 }
@@ -333,7 +357,13 @@ function renderDesksWithEvents(targetDate) {
         } else { // no desks
             appendPre('No desks found.');
         }
+
+        // reset display
+        loadingNotification.classList.add("hidden");
+        mainDiv.classList.remove("hidden");
+
     });
+
 
     assets.catch(err => {
         console.error("listDesks", "There was an error processing the desks. " + err)

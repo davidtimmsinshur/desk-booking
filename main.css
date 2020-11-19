@@ -1,4 +1,136 @@
-body {
-    background-color: white;
+* {box-sizing: border-box;}
+
+/* Style the navbar */
+.topbar {
+    overflow: hidden;
+    background-color: #191e31;
+    color: #fff;
 }
 
+.topbar p {
+    float: left;
+    display: block;
+    color: #fff;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+/* Style the login container */
+.topbar .topbar-login {
+    float: right;
+    padding: 14px 16px;
+}
+
+/* Style the button inside the input container */
+.topbar .topbar-login button {
+    float: right;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #f5f5f5;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .topbar .topbar-login button:hover {
+    background: #ccc;
+  }
+
+.nav {
+    padding: 14px 14px;
+    background-color: #33384d;
+    border-top: 1px solid #1fc4d6;
+    /* display: inline-block;
+    float: none; */
+}
+
+.nav button {
+    padding: 6px 10px;
+    margin-right: 16px;
+    background: #f5f5f5;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+    
+}
+
+.nav button:hover {
+    background: #ccc;
+}
+
+button {
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* button:focus {
+  /* border: 1px double black; */
+  /* outline: 1px solid #1fc4d6;
+  outline-offset: 2px; 
+  box-shadow: 0 0 0 2pt #1fc4d6; 
+} */
+
+/* On small screens, display the navbar vertically instead of horizontally */
+@media screen and (max-width: 600px) {
+  .topbar .topbar-login {
+    float: none;
+  }
+  .topbar .topbar-login button {
+    float: none;
+    /* display: block; */
+    /* text-align: left; */
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+  }
+
+  .nav {    
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    text-align: center;
+  }
+  .nav button {
+    /* display: inline-block; */
+    width: 49%;
+    margin: auto;
+    padding: 14px;
+  }
+}
+
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hidden {
+    display: none;
+}
+
+#content {
+    white-space: pre-wrap;
+}
+
+body {
+    /* background-color: #f5f5f5; */
+    background-color: #fff;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0;
+    color: #000;
+}
+
+pre {
+    padding: 14px;
+    background: #fff;
+} 
+
+/* #33384d light purple */
+/* #f5f5f5 grey 
+#fff white
+color: #1fc4d6 greenblue
+
+*/

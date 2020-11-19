@@ -2,6 +2,10 @@
 <html>
 
 <head>
+	<meta charset="utf-8" />
+	<meta name=”robots” content=”noindex” />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 	<!-- Google Tag Manager -->
 	<script>(function (w, d, s, l, i) {
 			w[l] = w[l] || []; w[l].push({
@@ -12,14 +16,13 @@
 					'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
 		})(window, document, 'script', 'dataLayer', 'GTM-559QLBM');</script>
 	<!-- End Google Tag Manager -->
-	<title>DESKIFY: COVID Desk Booking Checker</title>
+	
 	<link href="main.css" rel="stylesheet">
+	<title>DESKIFY: Office Desk Booking Checker</title>
+
 	<link rel="icon" href="https://inshur.com/wp-content/uploads/2018/01/cropped-INSHUR-app-icon-32x32.png"
 		sizes="32x32" />
-
-	<meta charset="utf-8" />
-	<meta name=”robots” content=”noindex” />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://kit.fontawesome.com/ec60c2e8ce.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -27,17 +30,31 @@
 	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-559QLBM" height="0" width="0"
 			style="display:none;visibility:hidden"></iframe></noscript>
 	<!-- End Google Tag Manager (noscript) -->
-	<p>DESKIFY: COVID Desk Booking Checker</p>
 
-	<!--Add buttons to initiate auth sequence and sign out-->
-	<button id="authorize_button" style="display: none;">Authorize</button>
-	<button id="signout_button" style="display: none;">Sign Out</button>
-	<button id="current_button" style="display: none;">This Week</button>
-	<button id="next_button" style="display: none;">Next Week</button>
+	<div class="topbar">
+		<p class="title">DESKIFY: Office Desk Booking Checker</p>
+
+		<!--Add buttons to initiate auth sequence and sign out-->
+		<div class="topbar-login">
+			<button id="authorize_button" class="hidden">Sign In</button>
+			<button id="signout_button" class="hidden">Sign Out</button>
+		</div>
+	</div>
+	
+	<div class="nav">
+		<button id="current_button" class="hidden">This Week</button>
+		<button id="next_button" class="hidden">Next Week</button>
+	</div>
 
 	<!-- <img src="jubilee-desk-plan.png" alt="Jubilee Office Plan" width="800"/> -->
-	<pre id="content" style="white-space: pre-wrap;"></pre>
-
+	<div class="main">
+		<pre id="content" class=""></pre>
+	</div>
+	<div class="loading hidden">
+		<i class="fas fa-viruses fa-spin fa-3x"></i>
+		<p>Loading...</p>
+	</div>
+	
 	<script src="https://apis.google.com/js/api.js"></script>
 	<script src="script.js"></script>
 	<script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
