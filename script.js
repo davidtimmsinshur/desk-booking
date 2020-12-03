@@ -61,7 +61,7 @@ function updateSigninStatus(isSignedIn) {
         nextButton.classList.remove("hidden");
         
         let target = new Date();
-        target.setDate(target.getDate() - 0);
+        target.setDate(target.getDate() + 0);
         renderDesksWithEvents(target);
     } else {
         authorizeButton.classList.remove("hidden");
@@ -292,6 +292,9 @@ function renderDesksWithEvents(targetDate) {
                         // for each day in weekDays (excluding Sun and Sat)
                         for (let k = 1; k < numberOfDays - 1; k++) {
 
+                            currentDateString = weekDays[k].toLocaleDateString('en-GB');
+                            let message = ('    ' + currentDateString + '    ' + "No bookings");
+
                             // for each event
                             for (let j = 0; j < events[i].length; j++) {
 
@@ -317,35 +320,22 @@ function renderDesksWithEvents(targetDate) {
                                 console.log("start", start);
                                 console.log("end", end);
 
-                                currentDateString = weekDays[k].toLocaleDateString('en-GB');
-
                                 // check if event is active for current day k
                                 if (start <= weekDays[k] && end >= weekDays[k]) {
                                     // there is a booking
-                                    // display date or date range
-                                    console.log("booking", k);
+                                    // display date 
+                                    console.log("booking for weekday ", k);
                                     startDate = start.toLocaleDateString('en-GB');
                                     endDate = end.toLocaleDateString('en-GB');
                                     
-                                    appendPre('    ' + currentDateString + '    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
-
-                                    // //if ((start == end) || (start > end)) {
-                                    // if ((startDate == endDate)) {
-                                    //     // appendPre('(' + currentDateString + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
-                                    //     appendPre('    ' + currentDateString + '    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
-                                    // } else {
-                                    //     // appendPre('(' + currentDateString + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ' (' + startDate + ') - (' + endDate + '))');
-                                    //     // appendPre('(' + currentDateString + '):    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
-                                    //     appendPre('    ' + currentDateString + '    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
-                                    // }
-                                    break;
+                                    message = ('    ' + currentDateString + '    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
                                 } else {
                                     // skip to next event
-                                    console.log("no booking", k);
-                                    appendPre('    ' + currentDateString + '    ' + "No bookings");
-                                    break;
+                                    console.log("no booking for weekday", k);
                                 }
+                                
                             }
+                            appendPre(message);
                         }
 
                     } else { // no events
