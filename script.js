@@ -61,7 +61,7 @@ function updateSigninStatus(isSignedIn) {
         nextButton.classList.remove("hidden");
         
         let target = new Date();
-        target.setDate(target.getDate() + 0);
+        target.setDate(target.getDate() - 0);
         renderDesksWithEvents(target);
     } else {
         authorizeButton.classList.remove("hidden");
@@ -285,6 +285,8 @@ function renderDesksWithEvents(targetDate) {
                     //appendPre(assets[i].resourceName + ' (' + assets[i].resourceEmail + ')');
                     appendPre(assets[i].resourceName);
 
+                    // console.log("Resource", assets[i].resourceName);
+                    console.groupCollapsed("Resource:", assets[i].resourceName, ", events:", events[i].length);
                     console.log("event array", events[i]);
 
                     if (events[i].length > 0) { // events exist
@@ -312,13 +314,17 @@ function renderDesksWithEvents(targetDate) {
                                 }
 
                                 // convert utc timestamp to local time for user to reflect all day booking and set end time
+                                console.group("Starting date manipulation...");
+                                console.log("original start", start);
+                                console.log("original end", end);
                                 start = (new Date(start));
                                 start.setHours(0, 0, 0, 0);
                                 end = new Date(end);
-                                end.setHours(0, 0, 0, 0);
+                                // end.setHours(0, 0, 0, 0);
                                 end.setSeconds(-1);
-                                console.log("start", start);
-                                console.log("end", end);
+                                console.log("new start", start);
+                                console.log("new end", end);
+                                console.groupEnd();
 
                                 // check if event is active for current day k
                                 if (start <= weekDays[k] && end >= weekDays[k]) {
@@ -342,6 +348,7 @@ function renderDesksWithEvents(targetDate) {
                         appendPre('    No bookings for this period.');
                     }
                     appendPre("");
+                    console.groupEnd();
                 }
             });
         } else { // no desks

@@ -60,17 +60,15 @@
     background: #ccc;
 }
 
+.nav button:focus {
+  outline: #1fc4d6 auto 1px !important;
+  box-shadow: none !important;
+}
+
 button {
   border-radius: 4px;
   text-align: center;
 }
-
-/* button:focus {
-  /* border: 1px double black; */
-  /* outline: 1px solid #1fc4d6;
-  outline-offset: 2px; 
-  box-shadow: 0 0 0 2pt #1fc4d6; 
-} */
 
 /* On small screens, display the navbar vertically instead of horizontally */
 @media screen and (max-width: 600px) {
