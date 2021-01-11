@@ -132,3 +132,45 @@ pre {
 color: #1fc4d6 greenblue
 
 */
+
+.calendar-wrapper {
+  /* width: 1024px; */
+  overflow-x: auto;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: 125px repeat(5, 1fr);
+  max-width: 1024px;
+  margin: auto;
+  padding: 14px;
+}
+
+.grid-c-1 {
+  grid-column-start: 1;
+  text-align: left;
+  font-weight: bold;
+  padding-left: 7px;
+}
+ 
+.grid-header {
+  background: #eee;
+  border-bottom: 3px solid #1fc4d6;
+  border-left-style: none;
+  border-right-style: none;
+}
+h1 {
+  text-align: center;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+li {
+  padding: 7px 0px;
+  border-bottom: 1px lightgray solid;
+  border-right: 1px lightgray solid;
+  font-size: 0.8em;
+}
