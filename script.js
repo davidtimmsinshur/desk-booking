@@ -68,7 +68,6 @@ function updateSigninStatus(isSignedIn) {
         signoutButton.classList.add("hidden");
         currentButton.classList.add("hidden");
         nextButton.classList.add("hidden");
-        // loadingNotification.classList.add("hidden");
     }
 }
 
@@ -83,7 +82,7 @@ function handleAuthClick(event) {
  *  Sign out the user upon button click.
  */
 function handleSignoutClick(event) {
-    clearContent();
+    clearCalendar();
     gapi.auth2.getAuthInstance().signOut();
 }
 
@@ -91,7 +90,7 @@ function handleSignoutClick(event) {
 *  Button handlers.
 */
 function handleCurrentButtonClick(event) {
-    clearContent();
+    clearCalendar();
     // mainDiv.classList.add("hidden");
     // loadingNotification.classList.remove("hidden");
     let target = new Date();
@@ -101,7 +100,7 @@ function handleCurrentButtonClick(event) {
 }
 
 function handleNextButtonClick(event) {
-    clearContent();
+    clearCalendar();
     // mainDiv.classList.add("hidden");
     // loadingNotification.classList.remove("hidden");
     let target = new Date();
@@ -111,28 +110,14 @@ function handleNextButtonClick(event) {
     // mainDiv.classList.remove("hidden");
 }
 
-
-
 /**
- * Append a pre element to the body containing the given message
- * as its text node. Used to display the results of the API call.
- *
- * @param {string} message Text to be placed in pre element.
+ * Clear down contents of calendar wrapper
+ * @param {Clear } date 
  */
-function appendPre(message) {
-    var pre = document.getElementById('content');
-    var textContent = document.createTextNode(message + '\n');
-    pre.appendChild(textContent);
+function clearCalendar() {
+    const cal = document.getElementsByClassName('calendar-wrapper');
+    cal[0].textContent = '';
 }
-
-/**
- * Clear down contents of pre element 
- */
-function clearContent() {
-    var content = document.getElementById('content');
-    content.textContent = ""
-}
-
 
 /**
  * input optional date object, output array of first and last day of week for provided date.
@@ -258,7 +243,13 @@ function renderDesksWithEvents(targetDate) {
         let deskEvents = [];
 
         if (assets.length > 0) {
-            appendPre("Displaying Desk Bookings for " + new Date(week[0]).toLocaleDateString() + " - " + new Date(week[1]).toLocaleDateString() + "\n");
+            // write dates of interest title
+            let message = new Date(week[0]).toLocaleDateString() + " - " + new Date(week[1]).toLocaleDateString();
+            let textContent = document.createTextNode(message);
+            let el = document.createElement("h1");
+            el.appendChild(textContent);
+            var cal = document.getElementsByClassName('calendar-wrapper');
+            cal[0].appendChild(el);
 
             for (i = 0; i < assets.length; i++) {
 
@@ -268,10 +259,12 @@ function renderDesksWithEvents(targetDate) {
                 deskEvents.push(listUpcomingEvents(email, week[0], week[1]));
             }
 
-
             // Once all events have been returned, process array of events
             Promise.all(deskEvents).then(events => {
                 console.log("deskEvents", events);
+                let calList = document.createElement("ul");
+                calList.classList.add("calendar");
+                cal[0].appendChild(calList);
 
                 let weekDays = getDatesBetween(week[0], week[1]);
                 // console.log("weekDays", weekDays.toString());
@@ -279,11 +272,29 @@ function renderDesksWithEvents(targetDate) {
                 numberOfDays = weekDays.length;
                 console.log("numberOfDays", numberOfDays);
 
+                // Insert calendar header
+                let node = document.createElement("li");
+                node.classList.add("grid-header");
+                calList.appendChild(node);
+                for (let i = 1; i < 6; i++) {
+                    let node = document.createElement("li");
+                    let textContent = document.createTextNode(weekDays[i].toLocaleDateString('en-GB'));
+                    node.appendChild(textContent);
+                    node.classList.add("grid-header");
+                    calList.appendChild(node);
+                }
+
                 // Render results
                 // For each desk
                 for (let i = 0; i < events.length; i++) {
                     //appendPre(assets[i].resourceName + ' (' + assets[i].resourceEmail + ')');
-                    appendPre(assets[i].resourceName);
+                    // appendPre(assets[i].resourceName);
+                    // write desk name
+                    let node = document.createElement("li");
+                    let textContent = document.createTextNode(assets[i].resourceName);
+                    node.appendChild(textContent);
+                    node.classList.add("grid-c-1");
+                    calList.appendChild(node);
 
                     // console.log("Resource", assets[i].resourceName);
                     console.groupCollapsed("Resource:", assets[i].resourceName, ", events:", events[i].length);
@@ -295,7 +306,8 @@ function renderDesksWithEvents(targetDate) {
                         for (let k = 1; k < numberOfDays - 1; k++) {
 
                             currentDateString = weekDays[k].toLocaleDateString('en-GB');
-                            let message = ('    ' + currentDateString + '    ' + "No bookings");
+                            // let message = ('    ' + currentDateString + '    ' + "No bookings");
+                            let message = ("-");
 
                             // for each event
                             for (let j = 0; j < events[i].length; j++) {
@@ -334,25 +346,45 @@ function renderDesksWithEvents(targetDate) {
                                     startDate = start.toLocaleDateString('en-GB');
                                     endDate = end.toLocaleDateString('en-GB');
                                     
-                                    message = ('    ' + currentDateString + '    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
+                                    organizerEmail = events[i][j].organizer.email;
+                                    organizerEmail = organizerEmail.substring(0, organizerEmail.length - 4);
+                                    // message = ('    ' + currentDateString + '    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
+                                    // message = (events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
+                                    message = (organizerEmail);
                                 } else {
                                     // skip to next event
                                     console.log("no booking for weekday", k);
                                 }
                                 
                             }
-                            appendPre(message);
+                            // write event details
+                            let node = document.createElement("li");
+                            let textContent = document.createTextNode(message);
+                            node.appendChild(textContent);
+                            calList.appendChild(node);
                         }
 
                     } else { // no events
-                        appendPre('    No bookings for this period.');
+
+                        for (let k = 1; k < numberOfDays - 1; k++) {
+                            // currentDateString = weekDays[k].toLocaleDateString('en-GB');
+                            // let message = ('    ' + currentDateString + '    ' + "No bookings");
+                            let message = ("-");
+                            // appendCalendar(message);
+                            let node = document.createElement("li");
+                            let textContent = document.createTextNode(message);
+                            node.appendChild(textContent);
+                            calList.appendChild(node);
+                        }
                     }
-                    appendPre("");
                     console.groupEnd();
                 }
             });
         } else { // no desks
-            appendPre('No desks found.');
+            let node = document.createElement("p");
+            let textContent = document.createTextNode('No desks found.');
+            node.appendChild(textContent);
+            calList.appendChild(node);
         }
 
         // reset display
