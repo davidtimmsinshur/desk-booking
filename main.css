@@ -141,7 +141,7 @@ color: #1fc4d6 greenblue
 .calendar {
   display: grid;
   grid-template-columns: 125px repeat(5, 1fr);
-  max-width: 1024px;
+  max-width: 1280px;
   margin: auto;
   padding: 14px;
 }
