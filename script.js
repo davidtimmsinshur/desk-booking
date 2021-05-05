@@ -16,6 +16,9 @@ var currentButton = document.getElementById('current_button');
 var nextButton = document.getElementById('next_button');
 var loadingNotification = document.getElementsByClassName('loading')[0];
 var mainDiv = document.getElementsByClassName('main')[0];
+let dateOffset = 0;
+let dateOffsetFutureMax = 7;
+let dateOffsetPastMax = -14;
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -61,7 +64,7 @@ function updateSigninStatus(isSignedIn) {
         nextButton.classList.remove("hidden");
         
         let target = new Date();
-        target.setDate(target.getDate() - 0);
+        target.setDate(target.getDate() + dateOffset);
         renderDesksWithEvents(target);
     } else {
         authorizeButton.classList.remove("hidden");
@@ -93,6 +96,7 @@ function handleCurrentButtonClick(event) {
     clearCalendar();
     // mainDiv.classList.add("hidden");
     // loadingNotification.classList.remove("hidden");
+    dateOffset = 0;
     let target = new Date();
     renderDesksWithEvents(target);
     // loadingNotification.classList.add("hidden");
@@ -103,11 +107,32 @@ function handleNextButtonClick(event) {
     clearCalendar();
     // mainDiv.classList.add("hidden");
     // loadingNotification.classList.remove("hidden");
+    dateOffset = 7;
     let target = new Date();
-    target.setDate(target.getDate() + 7);
+    target.setDate(target.getDate() + dateOffset);
     renderDesksWithEvents(target);
     // loadingNotification.classList.add("hidden");
     // mainDiv.classList.remove("hidden");
+}
+
+function handleRecedeButtonClick(event) {
+    if (dateOffset > dateOffsetPastMax) {
+        clearCalendar();
+        dateOffset -= 7;
+        let target = new Date();
+        target.setDate(target.getDate() + dateOffset);
+        renderDesksWithEvents(target);
+    }
+}
+
+function handleAdvanceButtonClick(event) {
+    if (dateOffset < dateOffsetFutureMax) {
+        clearCalendar();
+        dateOffset += 7;
+        let target = new Date();
+        target.setDate(target.getDate() + dateOffset);
+        renderDesksWithEvents(target);
+    }
 }
 
 /**
