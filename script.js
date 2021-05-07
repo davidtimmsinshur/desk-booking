@@ -104,6 +104,7 @@ function handleCurrentButtonClick(event) {
     // mainDiv.classList.add("hidden");
     // loadingNotification.classList.remove("hidden");
     dateOffset = 0;
+    showHideCalendarNav();
     let target = new Date();
     renderDesksWithEvents(target);
     // loadingNotification.classList.add("hidden");
@@ -115,6 +116,7 @@ function handleNextButtonClick(event) {
     // mainDiv.classList.add("hidden");
     // loadingNotification.classList.remove("hidden");
     dateOffset = 7;
+    showHideCalendarNav();
     let target = new Date();
     target.setDate(target.getDate() + dateOffset);
     renderDesksWithEvents(target);
@@ -126,6 +128,7 @@ function handlePreviousButtonClick(event) {
     if (dateOffset > dateOffsetPastMax) {
         clearCalendar();
         dateOffset -= 7;
+        showHideCalendarNav();
         let target = new Date();
         target.setDate(target.getDate() + dateOffset);
         renderDesksWithEvents(target);
@@ -136,10 +139,25 @@ function handleAdvanceButtonClick(event) {
     if (dateOffset < dateOffsetFutureMax) {
         clearCalendar();
         dateOffset += 7;
+        showHideCalendarNav();
         let target = new Date();
         target.setDate(target.getDate() + dateOffset);
         renderDesksWithEvents(target);
     }
+}
+
+function showHideCalendarNav() {
+    if (dateOffset == dateOffsetPastMax){ //sort this bit out
+        previousWeekButton.classList.add("hidden");
+    }
+    else if (dateOffset == dateOffsetFutureMax){
+        nextWeekButton.classList.add("hidden");
+    }
+    else {
+        previousWeekButton.classList.remove("hidden");
+        nextWeekButton.classList.remove("hidden");
+    }
+
 }
 
 /**
