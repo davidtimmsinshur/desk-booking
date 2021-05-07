@@ -14,6 +14,8 @@ var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
 var currentButton = document.getElementById('current_button');
 var nextButton = document.getElementById('next_button');
+var previousWeekButton = document.getElementById('previous_button');
+var nextWeekButton = document.getElementById('advance_button');
 var loadingNotification = document.getElementsByClassName('loading')[0];
 var mainDiv = document.getElementsByClassName('main')[0];
 let dateOffset = 0;
@@ -47,6 +49,8 @@ function initClient() {
         signoutButton.onclick = handleSignoutClick;
         currentButton.onclick = handleCurrentButtonClick;
         nextButton.onclick = handleNextButtonClick;
+        previousWeekButton.onclick = handlePreviousButtonClick;
+        nextWeekButton.onclick = handleAdvanceButtonClick;
     }, function (error) {
         appendPre(JSON.stringify(error, null, 2));
     });
@@ -62,7 +66,8 @@ function updateSigninStatus(isSignedIn) {
         signoutButton.classList.remove("hidden");
         currentButton.classList.remove("hidden");
         nextButton.classList.remove("hidden");
-        
+        previousWeekButton.classList.remove("hidden");
+        nextWeekButton.classList.remove("hidden");
         let target = new Date();
         target.setDate(target.getDate() + dateOffset);
         renderDesksWithEvents(target);
@@ -71,6 +76,8 @@ function updateSigninStatus(isSignedIn) {
         signoutButton.classList.add("hidden");
         currentButton.classList.add("hidden");
         nextButton.classList.add("hidden");
+        previousWeekButton.classList.add("hidden");
+        nextWeekButton.classList.add("hidden");
     }
 }
 
@@ -115,7 +122,7 @@ function handleNextButtonClick(event) {
     // mainDiv.classList.remove("hidden");
 }
 
-function handleRecedeButtonClick(event) {
+function handlePreviousButtonClick(event) {
     if (dateOffset > dateOffsetPastMax) {
         clearCalendar();
         dateOffset -= 7;
@@ -140,8 +147,8 @@ function handleAdvanceButtonClick(event) {
  * @param {Clear } date 
  */
 function clearCalendar() {
-    const cal = document.getElementsByClassName('calendar-wrapper');
-    cal[0].textContent = '';
+    document.getElementById("calendar_title").textContent = '';
+    document.getElementsByClassName('calendar-results')[0].textContent = '';
 }
 
 /**
@@ -273,8 +280,10 @@ function renderDesksWithEvents(targetDate) {
             let textContent = document.createTextNode(message);
             let el = document.createElement("h1");
             el.appendChild(textContent);
-            var cal = document.getElementsByClassName('calendar-wrapper');
-            cal[0].appendChild(el);
+            var title = document.getElementById('calendar_title');
+            title.appendChild(el);
+
+            var cal = document.getElementsByClassName('calendar-results');
 
             for (i = 0; i < assets.length; i++) {
 
