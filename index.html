@@ -49,7 +49,14 @@
 	<!-- <img src="jubilee-desk-plan.png" alt="Jubilee Office Plan" width="800"/> -->
 	<div class="main">
 		<pre id="content" class="hidden"></pre>
-		<div class="calendar-wrapper"></div>
+		<div class="calendar-wrapper">
+			<div class="calendar-dates">
+				<button id="previous_button" class="hidden calendar-nav"><<</button>
+				<span id="calendar_title"></span>
+				<button id="advance_button" class="hidden calendar-nav">>></button>
+			</div>
+			<div class="calendar-results"></div>
+		</div>
 	</div>
 	<div class="loading hidden">
 		<i class="fas fa-viruses fa-spin fa-3x"></i>
