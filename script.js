@@ -38,7 +38,8 @@ function initClient() {
         apiKey: API_KEY,
         clientId: CLIENT_ID,
         discoveryDocs: DISCOVERY_DOCS,
-        scope: SCOPES
+        scope: SCOPES,
+        // current_scope_granted = true;
     }).then(function () {
         // Listen for sign-in state changes.
         gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
@@ -52,7 +53,7 @@ function initClient() {
         previousWeekButton.onclick = handlePreviousButtonClick;
         nextWeekButton.onclick = handleAdvanceButtonClick;
     }, function (error) {
-        appendPre(JSON.stringify(error, null, 2));
+        console.log(JSON.stringify(error, null, 2));
     });
 }
 
@@ -149,9 +150,15 @@ function handleAdvanceButtonClick(event) {
 function showHideCalendarNav() {
     if (dateOffset == dateOffsetPastMax){ //sort this bit out
         previousWeekButton.classList.add("hidden");
+        if (dateOffset != dateOffsetFutureMax) {
+            nextWeekButton.classList.remove("hidden");
+        }
     }
     else if (dateOffset == dateOffsetFutureMax){
         nextWeekButton.classList.add("hidden");
+        if (dateOffset != dateOffsetPastMax){
+            previousWeekButton.classList.remove("hidden");
+        }
     }
     else {
         previousWeekButton.classList.remove("hidden");
