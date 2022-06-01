@@ -242,7 +242,7 @@ function listDesks() {
 		.list({
 			customer: 'my_customer',
 			orderBy: 'resourceName',
-			query: '"generatedResourceName": "(Desk)-Brighton, UK-Desk*"'
+			query: '"generatedResourceName": "(Desk)-Brighton, UK-2-Desk*"'
 		})
 		.then(function(response) {
 			console.log('resources.calendars.list Response', response);
