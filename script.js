@@ -24,10 +24,6 @@ var mainDiv = document.getElementsByClassName('main')[0];
 let dateOffset = 0;
 let dateOffsetFutureMax = 7;
 let dateOffsetPastMax = -14;
-let gapiInited = false;
-let gisInited = false;
-let tokenClient = undefined;
-
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -40,75 +36,41 @@ function handleClientLoad() {
  *  Initializes the API client library and sets up sign-in state
  *  listeners.
  */
-async function initClient() {
-	await gapi.client
+function initClient() {
+	gapi.client
 		.init({
 			apiKey: API_KEY,
+			clientId: CLIENT_ID,
 			discoveryDocs: DISCOVERY_DOCS,
+			scope: SCOPES
+			// current_scope_granted = true;
 		})
-		gapiInited = true;
-		maybeEnableButtons();
-	}
+		.then(
+			function() {
+				// Listen for sign-in state changes.
+				gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
-	function gisLoaded() {
-		tokenClient = google.accounts.oauth2.initTokenClient({
-			client_id: CLIENT_ID,
-			scope: SCOPES,
-			callback: '', // defined later
-		});
-		gisInited = true;
-		maybeEnableButtons();
-	}
-
-
-	function maybeEnableButtons() {
-		if (!gapiInited || !gisInited) return;
-		// Handle the initial sign-in state.
-		// updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-				authorizeButton.classList.remove('hidden');
-
-		authorizeButton.onclick = handleAuthClick;
-		signoutButton.onclick = handleSignoutClick;
-		currentButton.onclick = handleCurrentButtonClick;
-		nextButton.onclick = handleNextButtonClick;
-		previousWeekButton.onclick = handlePreviousButtonClick;
-		nextWeekButton.onclick = handleAdvanceButtonClick;
-	}
-
+				// Handle the initial sign-in state.
+				updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+				authorizeButton.onclick = handleAuthClick;
+				signoutButton.onclick = handleSignoutClick;
+				currentButton.onclick = handleCurrentButtonClick;
+				nextButton.onclick = handleNextButtonClick;
+				previousWeekButton.onclick = handlePreviousButtonClick;
+				nextWeekButton.onclick = handleAdvanceButtonClick;
+			},
+			function(error) {
+				console.log(JSON.stringify(error, null, 2));
+			}
+		);
+}
 
 /**
  *  Called when the signed in status changes, to update the UI
  *  appropriately. After a sign-in, the API is called.
  */
-// function updateSigninStatus(isSignedIn) {
-// 	if (isSignedIn) {
-// 		authorizeButton.classList.add('hidden');
-// 		signoutButton.classList.remove('hidden');
-// 		currentButton.classList.remove('hidden');
-// 		nextButton.classList.remove('hidden');
-// 		previousWeekButton.classList.remove('hidden');
-// 		nextWeekButton.classList.remove('hidden');
-// 		let target = new Date();
-// 		target.setDate(target.getDate() + dateOffset);
-// 		renderDesksWithEvents(target);
-// 	} else {
-// 		authorizeButton.classList.remove('hidden');
-// 		signoutButton.classList.add('hidden');
-// 		currentButton.classList.add('hidden');
-// 		nextButton.classList.add('hidden');
-// 		previousWeekButton.classList.add('hidden');
-// 		nextWeekButton.classList.add('hidden');
-// 	}
-// }
-
-/**
- *  Sign in the user upon button click.
- */
-function handleAuthClick(event) {
-	tokenClient.callback = async (resp) => {
-		if (resp.error !== undefined) {
-			throw (resp);
-		}
+function updateSigninStatus(isSignedIn) {
+	if (isSignedIn) {
 		authorizeButton.classList.add('hidden');
 		signoutButton.classList.remove('hidden');
 		currentButton.classList.remove('hidden');
@@ -118,16 +80,21 @@ function handleAuthClick(event) {
 		let target = new Date();
 		target.setDate(target.getDate() + dateOffset);
 		renderDesksWithEvents(target);
-	};
-
-	if (gapi.client.getToken() === null) {
-		// Prompt the user to select a Google Account and ask for consent to share their data
-		// when establishing a new session.
-		tokenClient.requestAccessToken({prompt: 'consent'});
 	} else {
-		// Skip display of account chooser and consent dialog for an existing session.
-		tokenClient.requestAccessToken({prompt: ''});
+		authorizeButton.classList.remove('hidden');
+		signoutButton.classList.add('hidden');
+		currentButton.classList.add('hidden');
+		nextButton.classList.add('hidden');
+		previousWeekButton.classList.add('hidden');
+		nextWeekButton.classList.add('hidden');
 	}
+}
+
+/**
+ *  Sign in the user upon button click.
+ */
+function handleAuthClick(event) {
+	gapi.auth2.getAuthInstance().signIn();
 }
 
 /**
@@ -135,18 +102,7 @@ function handleAuthClick(event) {
  */
 function handleSignoutClick(event) {
 	clearCalendar();
-	const token = gapi.client.getToken();
-	if (token !== null) {
-		// google.accounts.oauth2.revoke(token.access_token);
-		gapi.client.setToken('');
-		authorizeButton.classList.remove('hidden');
-		signoutButton.classList.add('hidden');
-		currentButton.classList.add('hidden');
-		nextButton.classList.add('hidden');
-		previousWeekButton.classList.add('hidden');
-		nextWeekButton.classList.add('hidden');
-
-	}
+	gapi.auth2.getAuthInstance().signOut();
 }
 
 /**
