@@ -1,0 +1,185 @@
+* {box-sizing: border-box;}
+
+/* Style the navbar */
+.topbar {
+    overflow: hidden;
+    background-color: #191e31;
+    color: #fff;
+}
+
+.topbar p {
+    float: left;
+    display: block;
+    color: #fff;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+/* Style the login container */
+.topbar .topbar-login {
+    float: right;
+    padding: 14px 16px;
+}
+
+/* Style the button inside the input container */
+.topbar .topbar-login button {
+    float: right;
+    margin-top: 8px;
+    padding: 6px 10px;
+    margin-right: 16px;
+  }
+  
+  .topbar .topbar-login button:hover {
+    
+  }
+
+.nav {
+    padding: 14px 14px;
+    background-color: #33384d;
+    border-top: 1px solid #1fc4d6;
+}
+
+.nav button {
+  padding: 6px 10px;
+  margin-right: 16px;
+    
+}
+
+.nav button:focus {
+  outline: #1fc4d6 auto 1px !important;
+  box-shadow: none !important;
+}
+
+button {
+  border-radius: 4px;
+  text-align: center;
+    background: #f5f5f5;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+  background: #ccc;
+}
+
+
+/* On small screens, display the navbar vertically instead of horizontally */
+@media screen and (max-width: 600px) {
+  .topbar .topbar-login {
+    float: none;
+  }
+  .topbar .topbar-login button {
+    float: none;
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+  }
+
+  .nav {    
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    text-align: center;
+  }
+  .nav button {
+    width: 49%;
+    margin: auto;
+    padding: 14px;
+  }
+}
+
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hidden {
+    display: none;
+}
+
+#content {
+    white-space: pre-wrap;
+}
+
+body {
+    background-color: #fff;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0;
+    color: #000;
+}
+
+pre {
+    padding: 14px;
+    background: #fff;
+} 
+
+/* #33384d light purple */
+/* #f5f5f5 grey 
+#fff white
+color: #1fc4d6 greenblue
+
+*/
+
+.calendar-wrapper {
+  overflow-x: auto;
+  text-align: center;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: 125px repeat(5, 1fr);
+  max-width: 1280px;
+  margin: auto;
+  padding: 14px;
+}
+
+.grid-c-1 {
+  grid-column-start: 1;
+  text-align: left;
+  font-weight: bold;
+  padding-left: 7px;
+}
+ 
+.grid-header {
+  background: #eee;
+  border-bottom: 3px solid #1fc4d6;
+  border-left-style: none;
+  border-right-style: none;
+}
+h1 {
+  text-align: center;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+li {
+  padding: 7px 0px;
+  border-bottom: 1px lightgray solid;
+  border-right: 1px lightgray solid;
+  font-size: 0.8em;
+}
+
+.calendar-dates {
+  display: inline-flex;
+  align-items: center;
+  text-align: center;
+  padding: 14px;
+  margin: auto;
+}
+
+.calendar-dates h1 {
+  margin: 0px 8px;
+}
+
+.calendar-nav {
+  border-radius: 50%;
+  padding: 10px 10px;
+  background: none;
+}
