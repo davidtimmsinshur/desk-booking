@@ -15,12 +15,41 @@
     text-decoration: none;
     font-size: 17px;
   }
+  
+  .topbar .topbar-group {
+      float: right;
+      padding: 14px 16px;
+  }
 
-/* Style the login container */
-.topbar .topbar-login {
-    float: right;
-    padding: 14px 16px;
-}
+  .topbar .topbar-group div {
+      float: right;
+  }
+
+  .topbar .topbar-group .topbar-location {
+      float: left;
+      display: flex;
+      align-items: center;
+      margin-right: 8px;
+    }
+    
+    .topbar-location img {
+      margin-right: 8px;
+      opacity: 0.7;
+      transition: 0.3s;
+      height: 32px;
+      width: 32px;
+    }
+    
+    .topbar-location .active img,
+    .topbar-location img:hover {
+      height: 36px;
+      width: 36px;
+      opacity: 1;
+  }
+
+  .topbar .topbar-group .topbar-login {
+      float: right;
+  }
 
 /* Style the button inside the input container */
 .topbar .topbar-login button {
@@ -30,10 +59,6 @@
     margin-right: 16px;
   }
   
-  .topbar .topbar-login button:hover {
-    
-  }
-
 .nav {
     padding: 14px 14px;
     background-color: #33384d;
