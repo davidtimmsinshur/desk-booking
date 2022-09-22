@@ -25,7 +25,7 @@ var mainDiv = document.getElementsByClassName("main")[0];
 let dateOffset = 0;
 let dateOffsetFutureMax = 7;
 let dateOffsetPastMax = -14;
-const UK_RESOURCE_PATTERN = "(Desk)-Brighton, UK-2-Desk*";
+const NY_RESOURCE_PATTERN = "NYC-3-Desk*";
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -244,7 +244,7 @@ function listDesks() {
     .list({
       customer: "my_customer",
       orderBy: "resourceName",
-      query: `"generatedResourceName": "${UK_RESOURCE_PATTERN}"`,
+      query: `"generatedResourceName": "${NY_RESOURCE_PATTERN}"`,
     })
     .then(function (response) {
       console.log("resources.calendars.list Response", response);
@@ -426,22 +426,18 @@ function renderDesksWithEvents(targetDate) {
                   startDate = start.toLocaleDateString("en-GB");
                   endDate = end.toLocaleDateString("en-GB");
 
-                  organizerEmail = events[i][j].organizer.email;
-                  // if (organizerEmail.indexOf("@inshur") > 0) {
+                  // organizerEmail = events[i][j].organizer.email;
                   // organizerEmail = organizerEmail.substring(
                   //   0,
                   //   organizerEmail.length - 4
                   // );
                   // message = organizerEmail;
+                  // message = ('    ' + currentDateString + '    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
                   message =
                     events[i][j].summary +
                     " (" +
                     events[i][j].organizer.email +
                     ")";
-                  // } else {
-                  //   message = events[i][j].summary;
-                  // }
-                  // message = ('    ' + currentDateString + '    ' + events[i][j].summary + ' (' + events[i][j].organizer.email + ')');
                 } else {
                   // skip to next event
                   console.log("no booking for weekday", k);
