@@ -15,12 +15,24 @@
     text-decoration: none;
     font-size: 17px;
   }
+  
+  .topbar .topbar-group {
+      float: right;
+      padding: 14px 16px;
+  }
 
-/* Style the login container */
-.topbar .topbar-login {
-    float: right;
-    padding: 14px 16px;
-}
+  .topbar .topbar-group div {
+      float: right;
+  }
+
+  .topbar .topbar-group .topbar-location {
+      float: left;
+      margin-right: 16px;
+  }
+
+  .topbar .topbar-group .topbar-login {
+      float: right;
+  }
 
 /* Style the button inside the input container */
 .topbar .topbar-login button {
@@ -30,10 +42,6 @@
     margin-right: 16px;
   }
   
-  .topbar .topbar-login button:hover {
-    
-  }
-
 .nav {
     padding: 14px 14px;
     background-color: #33384d;
