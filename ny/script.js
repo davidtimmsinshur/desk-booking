@@ -25,7 +25,7 @@ var mainDiv = document.getElementsByClassName("main")[0];
 let dateOffset = 0;
 let dateOffsetFutureMax = 7;
 let dateOffsetPastMax = -14;
-const NY_RESOURCE_PATTERN = "NYC-3-Desk*";
+const NY_RESOURCE_PATTERN = "NYC-Desk*";
 
 /**
  *  On load, called to load the auth2 library and API client library.
